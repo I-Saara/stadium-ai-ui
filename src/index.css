@@ -2,43 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 🌌 GLOBAL RESET */
-* {
+/* GLOBAL RESET */
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-/* 🌑 BODY */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
-    "Inter", sans-serif;
   background: #000;
   color: #00ff88;
+  font-family: system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
-/* 🌌 BACKGROUND GLOW */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(0,255,136,0.08), transparent 40%),
-    radial-gradient(circle at 80% 60%, rgba(0,255,136,0.06), transparent 40%),
-    radial-gradient(circle at 50% 100%, rgba(0,255,136,0.05), transparent 50%);
-  z-index: -1;
+/* SMOOTH EVERYTHING */
+* {
+  transition: all 0.25s ease;
 }
 
-/* ✨ FADE IN */
+/* SCROLLBAR (clean look) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 136, 0.3);
+  border-radius: 10px;
+}
+
+/* GLASS CARD */
+.glass {
+  background: rgba(0, 255, 136, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.1);
+}
+
+/* BUTTON STYLE */
+.btn {
+  padding: 12px 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  background: rgba(0, 255, 136, 0.05);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: #00ff88;
+  color: black;
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+}
+
+/* FADE IN */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0px);
   }
 }
 
@@ -46,144 +67,24 @@ body::before {
   animation: fadeIn 0.6s ease forwards;
 }
 
-/* ✨ FLOAT (subtle Apple motion) */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-/* ✨ GLOW PULSE */
-@keyframes glowPulse {
-  0% { box-shadow: 0 0 10px rgba(0,255,136,0.2); }
-  50% { box-shadow: 0 0 30px rgba(0,255,136,0.5); }
-  100% { box-shadow: 0 0 10px rgba(0,255,136,0.2); }
-}
-
-.animate-glow {
-  animation: glowPulse 2.5s infinite ease-in-out;
-}
-
-/* 🟢 BUTTON BASE */
-.btn {
-  @apply px-6 py-3 rounded-xl border border-green-400/30
-  backdrop-blur-xl bg-green-400/5 text-green-300
-  transition-all duration-300 ease-out;
-}
-
-/* 🟢 BUTTON HOVER (Apple feel) */
-.btn:hover {
-  background: rgba(0,255,136,0.9);
-  color: black;
-  transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 10px 30px rgba(0,255,136,0.25);
-}
-
-/* 🟢 BUTTON CLICK */
-.btn:active {
-  transform: scale(0.97);
-}
-
-/* 🧊 GLASS CARD */
-.card {
-  @apply rounded-2xl border border-green-400/20
-  bg-green-400/5 backdrop-blur-xl;
-  box-shadow: 0 0 40px rgba(0,255,136,0.08);
-  transition: all 0.4s ease;
-}
-
-/* 🧊 CARD HOVER (depth) */
-.card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 0 60px rgba(0,255,136,0.2);
-}
-
-/* 🧍 PEOPLE SMOOTH MOVEMENT */
-.person {
-  position: absolute;
-  font-size: 14px;
-  transition: all 3s linear;
-  filter: drop-shadow(0 0 6px rgba(0,255,136,0.6));
-}
-
-/* ✨ TRAIL EFFECT */
-.person::after {
-  content: "";
+/* FLOAT PARTICLES */
+.particle {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: rgba(0,255,136,0.3);
+  background: #00ff88;
   border-radius: 50%;
-  filter: blur(4px);
-  transform: translate(-50%, -50%);
+  opacity: 0.3;
+  animation: float 6s infinite ease-in-out;
 }
 
-/* 🗺️ MAP CONTAINER */
-.map {
-  border-radius: 24px;
-  border: 1px solid rgba(0,255,136,0.2);
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 0 80px rgba(0,255,136,0.1);
-  position: relative;
-  overflow: hidden;
+/* GLOW TEXT */
+.glow-text {
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.7);
 }
-
-/* ✨ ZONE GLOW */
-.zone-glow {
-  position: absolute;
-  width: 240px;
-  height: 240px;
-  background: rgba(0,255,136,0.08);
-  filter: blur(80px);
-  border-radius: 50%;
-  animation: float 8s infinite ease-in-out;
-}
-
-/* 🟢 TEXT STYLING */
-.heading-xl {
-  font-size: 64px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.heading-lg {
-  font-size: 28px;
-  font-weight: 600;
-}
-
-.subtle {
-  opacity: 0.6;
-}
-
-/* ✨ INPUT */
-input {
-  transition: all 0.3s ease;
-}
-
-input:focus {
-  border-color: #00ff88;
-  box-shadow: 0 0 10px rgba(0,255,136,0.3);
-}
-
-/* 🧠 AI RESPONSE BOX */
-.response-box {
-  background: rgba(0,255,136,0.08);
-  border: 1px solid rgba(0,255,136,0.2);
-  border-radius: 16px;
-  animation: fadeIn 0.5s ease;
-}
-
-/* 🟢 SCROLLBAR (clean) */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0,255,136,0.3);
-  border-radius: 10px;
+.card-btn {
+  @apply px-10 py-6 rounded-3xl border border-green-400/30
+  bg-green-400/5 backdrop-blur-xl text-xl tracking-wide
+  transition-all duration-300 hover:bg-green-400 hover:text-black
+  hover:scale-105 shadow-[0_0_30px_rgba(0,255,136,0.2)];
 }

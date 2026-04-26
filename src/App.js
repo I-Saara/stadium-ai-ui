@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const API = "https://venue-ai-933158601741.us-central1.run.app";
 
@@ -6,127 +6,42 @@ export default function App() {
   const [decision, setDecision] = useState(null);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("home");
-  const [people, setPeople] = useState([]);
 
-  const [chat, setChat] = useState([]);
-  const [message, setMessage] = useState("");
-
-  const avatars = ["🚶", "🧍", "🏃"];
-
-  // 🟢 Initialize people
-  useEffect(() => {
-    const initial = Array.from({ length: 120 }).map(() => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      group: Math.floor(Math.random() * 3),
-    }));
-    setPeople(initial);
-  }, []);
-
-  // 🔥 Movement logic (towards zones)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPeople((prev) =>
-        prev.map((p) => {
-          const targets = [
-            { x: 20, y: 40 }, // Food
-            { x: 50, y: 80 }, // Washroom
-            { x: 85, y: 50 }, // Exit
-          ];
-
-          const target = targets[p.group];
-
-          const dx = (target.x - p.x) * 0.02;
-          const dy = (target.y - p.y) * 0.02;
-
-          let newX = p.x + dx + (Math.random() - 0.5) * 0.3;
-          let newY = p.y + dy + (Math.random() - 0.5) * 0.3;
-
-          if (
-            Math.abs(newX - target.x) < 2 &&
-            Math.abs(newY - target.y) < 2
-          ) {
-            return {
-              ...p,
-              x: Math.random() * 100,
-              y: Math.random() * 100,
-            };
-          }
-
-          return { ...p, x: newX, y: newY };
-        })
-      );
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // 🎯 Intent button → API
   const handleIntent = async (intent) => {
     setLoading(true);
     setDecision(null);
 
-    try {
-      const res = await fetch(`${API}/decision?intent=${intent}`);
-      const data = await res.json();
-      setDecision(data);
-    } catch (err) {
-      console.error(err);
-    }
+    const res = await fetch(`${API}/decision?intent=${intent}`);
+    const data = await res.json();
 
+    setDecision(data);
     setLoading(false);
   };
 
-  // 🤖 Chat → API
-  const handleChat = async () => {
-    if (!message) return;
-
-    const userMsg = { role: "user", text: message };
-    setChat((prev) => [...prev, userMsg]);
-    setMessage("");
-
-    try {
-      let intent = "food";
-      if (message.toLowerCase().includes("exit")) intent = "exit";
-      if (message.toLowerCase().includes("wash")) intent = "washroom";
-
-      const res = await fetch(`${API}/decision?intent=${intent}`);
-      const data = await res.json();
-
-      const aiMsg = {
-        role: "ai",
-        text: `${data.action}. ${data.reason}`,
-      };
-
-      setChat((prev) => [...prev, aiMsg]);
-    } catch {
-      setChat((prev) => [
-        ...prev,
-        { role: "ai", text: "Something went wrong." },
-      ]);
-    }
-  };
-
   return (
-    <div className="bg-black text-green-400 min-h-screen p-6 font-sans overflow-hidden">
+    <div className="relative min-h-screen bg-black text-white overflow-hidden">
+
+      {/* 🌌 BACKGROUND GLOW */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(0,255,150,0.15),transparent_40%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(0,255,150,0.1),transparent_40%)] animate-pulse" />
 
       {/* HEADER */}
-      <div className="flex justify-between mb-6">
-        <h1 className="text-xl opacity-70 tracking-widest">
+      <div className="relative z-10 flex justify-between items-center p-6">
+        <h1 className="text-sm tracking-[0.3em] text-green-400 opacity-80">
           STADIUM AI • LIVE
         </h1>
 
         <div className="flex gap-3">
           <button
             onClick={() => setMode("crowd")}
-            className="border border-green-400 px-3 py-1 rounded hover:bg-green-400 hover:text-black transition"
+            className="px-4 py-2 rounded-xl border border-green-400/40 hover:bg-green-400/10 transition backdrop-blur-md"
           >
             Crowd Map 📊
           </button>
 
           <button
             onClick={() => setMode("chat")}
-            className="border border-green-400 px-3 py-1 rounded hover:bg-green-400 hover:text-black transition"
+            className="px-4 py-2 rounded-xl border border-green-400/40 hover:bg-green-400/10 transition backdrop-blur-md"
           >
             Ask Agent 🤖
           </button>
@@ -135,178 +50,188 @@ export default function App() {
 
       {/* HOME */}
       {mode === "home" && (
-        <>
-          <h1 className="text-5xl mb-6 font-semibold">
+        <div className="relative z-10 flex flex-col items-center justify-center text-center mt-16">
+
+          <h1 className="text-6xl font-semibold leading-tight mb-6 bg-gradient-to-r from-green-300 to-green-500 text-transparent bg-clip-text">
             What do you want to do?
           </h1>
 
-          <div className="flex gap-4 mb-8">
-            {["food", "washroom", "exit"].map((intent) => (
+          {/* BUTTONS */}
+          <div className="flex gap-6 mb-12">
+            {[
+              { key: "food", label: "🍔 Food" },
+              { key: "washroom", label: "🚻 Restroom" },
+              { key: "exit", label: "🚪 Exit" },
+            ].map((item) => (
               <button
-                key={intent}
-                onClick={() => handleIntent(intent)}
-                className="border border-green-400 px-6 py-3 rounded-xl hover:bg-green-400 hover:text-black transition hover:scale-105"
+                key={item.key}
+                onClick={() => handleIntent(item.key)}
+                className="relative group px-8 py-4 rounded-2xl border border-green-400/30 backdrop-blur-xl 
+                hover:scale-110 transition duration-300 overflow-hidden"
               >
-                {intent === "food" && "🍔 Food"}
-                {intent === "washroom" && "🚻 Restroom"}
-                {intent === "exit" && "🚪 Exit"}
+                <div className="absolute inset-0 bg-green-400/10 opacity-0 group-hover:opacity-100 transition" />
+                <span className="relative text-lg">{item.label}</span>
               </button>
             ))}
           </div>
 
+          {/* LOADING */}
           {loading && (
-            <p className="animate-pulse text-lg">🤖 AI is thinking...</p>
+            <p className="animate-pulse text-green-400">
+              🤖 AI is analyzing crowd patterns...
+            </p>
           )}
 
+          {/* DECISION CARD */}
           {decision && (
-            <div className="border border-green-400 p-6 rounded-xl shadow-lg shadow-green-400/20 max-w-xl animate-fadeIn">
-              <p className="text-sm opacity-70 mb-2">AI DECISION ENGINE</p>
+            <div className="relative w-[500px] p-[1px] rounded-3xl bg-gradient-to-r from-green-400/40 to-transparent animate-fadeIn">
 
-              <h2 className="text-3xl mb-2 font-semibold">
-                {decision.action}
-              </h2>
+              <div className="bg-black/70 backdrop-blur-xl rounded-3xl p-8 border border-green-400/20 shadow-[0_0_60px_rgba(0,255,136,0.2)]">
 
-              <div className="flex gap-4 text-sm">
-                <p>⏱ {decision.wait_time}</p>
-                <p>{decision.timing}</p>
+                <p className="text-xs tracking-widest opacity-50 mb-2">
+                  AI DECISION ENGINE
+                </p>
+
+                <h2 className="text-4xl font-bold text-green-300 mb-3">
+                  {decision.action}
+                </h2>
+
+                <div className="flex justify-center gap-6 text-sm opacity-80 mb-3">
+                  <span>⏱ {decision.wait_time}</span>
+                  <span className="text-green-400">{decision.timing}</span>
+                </div>
+
+                <p className="opacity-60 mb-6">
+                  {decision.reason}
+                </p>
+
+                <button
+                  onClick={() => setMode("map")}
+                  className="bg-gradient-to-r from-green-400 to-green-300 text-black px-6 py-3 rounded-xl font-semibold 
+                  hover:scale-105 transition shadow-[0_0_25px_rgba(0,255,136,0.4)]"
+                >
+                  Start Navigation →
+                </button>
+
               </div>
-
-              <p className="opacity-70 mt-2">{decision.reason}</p>
-
-              <button
-                onClick={() => setMode("map")}
-                className="mt-4 bg-green-400 text-black px-4 py-2 rounded hover:scale-105 transition"
-              >
-                Start Navigation →
-              </button>
             </div>
           )}
-        </>
+        </div>
       )}
 
-      {/* MAP */}
+      {/* 🧭 MAP */}
       {mode === "map" && (
-        <div className="relative h-[400px] border border-green-400 rounded-xl overflow-hidden">
+        <div className="relative z-10 flex flex-col items-center mt-16">
 
-          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,255,136,0.15)_1px,transparent_1px)] bg-[size:20px_20px]" />
+          <div className="relative w-[600px] h-[400px] rounded-2xl border border-green-400/30 overflow-hidden backdrop-blur-xl">
 
-          <div className="absolute top-1/2 left-10 right-10 h-1 bg-green-400 animate-pulse" />
+            {/* GRID */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,255,136,0.15)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
-          <div className="absolute top-1/2 left-8 text-xl">🟢</div>
-          <div className="absolute top-1/2 right-8 text-xl">🎯</div>
+            {/* PATH */}
+            <div className="absolute top-1/2 left-10 right-10 h-1 bg-green-400 animate-pulse" />
 
-          <p className="absolute bottom-3 left-3 text-sm">
-            Navigating via least crowded route
-          </p>
+            <div className="absolute left-8 top-1/2 text-xl">🟢</div>
+            <div className="absolute right-8 top-1/2 text-xl">🎯</div>
+
+            <p className="absolute bottom-3 left-3 text-sm opacity-70">
+              Navigating via optimal route
+            </p>
+          </div>
 
           <button
             onClick={() => setMode("home")}
-            className="absolute top-3 right-3 border px-2 py-1 rounded"
+            className="mt-6 px-6 py-2 border rounded-xl hover:bg-green-400/10 transition"
           >
             Back
           </button>
         </div>
       )}
 
-      {/* CROWD MAP */}
+      {/* 📊 CROWD */}
       {mode === "crowd" && (
-        <>
-          <h2 className="text-2xl mb-6">Live Crowd Zones</h2>
+        <div className="relative z-10 flex flex-col items-center mt-10">
 
-          <div className="grid grid-cols-3 gap-6 mb-6">
-            {["Food", "Washroom", "Exit"].map((zone, index) => (
-              <div
-                key={zone}
-                className="relative h-64 border border-gray-300 rounded-xl overflow-hidden"
+          <h2 className="text-3xl mb-6 text-green-300">
+            Live Crowd Zones
+          </h2>
+
+          <div className="flex gap-6">
+            {["Food Court", "Restrooms", "Exit"].map((zone) => (
+              <div key={zone}
+                className="w-64 h-64 border border-green-400/30 rounded-2xl relative overflow-hidden backdrop-blur-xl"
               >
-                <p className="absolute top-2 left-3 text-sm">{zone}</p>
+                <p className="absolute top-2 left-3 text-sm opacity-70">
+                  {zone}
+                </p>
 
-                {people
-                  .filter((_, i) => i % 3 === index)
-                  .map((p, i) => (
-                    <div
-                      key={i}
-                      className="absolute text-xs"
-                      style={{
-                        left: `${p.x}%`,
-                        top: `${p.y}%`,
-                        transform: "translate(-50%, -50%)",
-                        transition: "linear 0.05s",
-                      }}
-                    >
-                      {avatars[i % avatars.length]}
-                    </div>
-                  ))}
+                {[...Array(40)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute text-xs animate-pulse"
+                    style={{
+                      left: Math.random() * 220,
+                      top: Math.random() * 220,
+                    }}
+                  >
+                    🚶
+                  </div>
+                ))}
               </div>
             ))}
           </div>
 
           <button
             onClick={() => setMode("home")}
-            className="border border-green-400 px-6 py-2 rounded w-full"
-          >
-            Back
-          </button>
-        </>
-      )}
-
-      {/* CHAT */}
-      {mode === "chat" && (
-        <div className="max-w-xl mx-auto">
-
-          <h2 className="text-2xl mb-4">Ask AI Agent 🤖</h2>
-
-          <div className="border border-green-400/30 p-4 rounded h-72 overflow-y-auto mb-3 bg-black/50">
-
-            {chat.length === 0 && (
-              <p className="opacity-50">
-                Ask things like “Should I go now?” or “Where is less crowded?”
-              </p>
-            )}
-
-            {chat.map((msg, i) => (
-              <div
-                key={i}
-                className={`mb-2 ${
-                  msg.role === "user" ? "text-right" : "text-left"
-                }`}
-              >
-                <span
-                  className={`inline-block px-3 py-2 rounded-lg ${
-                    msg.role === "user"
-                      ? "bg-green-400 text-black"
-                      : "border border-green-400"
-                  }`}
-                >
-                  {msg.text}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex gap-2">
-            <input
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Ask anything..."
-              className="flex-1 p-2 bg-black border border-green-400/30 rounded"
-            />
-            <button
-              onClick={handleChat}
-              className="bg-green-400 text-black px-4 rounded"
-            >
-              Send
-            </button>
-          </div>
-
-          <button
-            onClick={() => setMode("home")}
-            className="mt-4 border px-3 py-1 rounded"
+            className="mt-6 px-6 py-2 border rounded-xl hover:bg-green-400/10 transition"
           >
             Back
           </button>
         </div>
       )}
+
+      {/* 🤖 CHAT */}
+      {mode === "chat" && (
+        <div className="relative z-10 flex justify-center mt-16">
+
+          <div className="w-[500px] p-[1px] rounded-3xl bg-gradient-to-r from-green-400/40 to-transparent">
+
+            <div className="bg-black/70 backdrop-blur-xl rounded-3xl p-6 border border-green-400/20">
+
+              <p className="text-sm opacity-70 mb-3">
+                Ask anything about navigation
+              </p>
+
+              <input
+                placeholder="Where should I go right now?"
+                className="w-full p-3 rounded-xl bg-black border border-green-400/30 mb-4 outline-none"
+              />
+
+              <button
+                onClick={() => handleIntent("food")}
+                className="w-full bg-green-400 text-black py-2 rounded-xl font-semibold hover:scale-105 transition"
+              >
+                Ask AI →
+              </button>
+
+              {decision && (
+                <p className="mt-4 text-green-300">
+                  {decision.action}
+                </p>
+              )}
+
+              <button
+                onClick={() => setMode("home")}
+                className="mt-4 text-sm opacity-60 hover:opacity-100"
+              >
+                ← Back
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

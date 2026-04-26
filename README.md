@@ -1,70 +1,156 @@
-# Getting Started with Create React App
+# 🏟️ Stadium AI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Real-Time Crowd Intelligence for Physical Spaces
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🚀 Why this exists
 
-### `npm start`
+Every large event has the same problem:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+You decide to grab food →
+You walk there →
+You realize the line is insane →
+Now you’ve wasted 15 minutes.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+There is **no system today that helps people make smarter decisions inside crowded venues**.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 💡 What this project does
 
-### `npm run build`
+Stadium AI is a **decision + navigation system** that helps users choose *where to go* based on **live crowd conditions**, not guesswork.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Instead of just showing directions, it answers:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* *“Where should I go right now?”*
+* *“Which option will save me time?”*
+* *“What’s the fastest way out?”*
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## ⚙️ How it works
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```text
+User intent → Decision API → Best option (with reasoning)
+                                ↓
+                        Navigation layer
+                                ↓
+                   Optional → Google Maps routing
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🔑 Core Features
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 🧠 Intelligent Decision Layer
 
-## Learn More
+* Takes user intent (food, restroom, exit)
+* Returns:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  * Optimal choice
+  * Estimated wait time
+  * Context-aware reasoning
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+### 🚶 Dynamic Crowd Simulation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* Moving agents represent crowd flow
+* Helps visualize congestion in real time
+* Makes the system feel *alive*, not static
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 🗺️ Navigation System
 
-### Making a Progressive Web App
+* Shows:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  * User position (via GPS)
+  * Target destination
+  * Path between them
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 🌍 Real-World Integration
 
-### Deployment
+* One-click → open in Google Maps
+* Connects prototype to real usability
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## 🎯 What makes this different
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Most projects:
+
+* Show maps
+* Show data
+
+This project:
+
+* **Helps you decide**
+* Then **guides you there**
+
+👉 It combines:
+
+* Decision-making
+* Visualization
+* Navigation
+
+in one flow.
+
+---
+
+## 🧪 Demo Flow (30 seconds)
+
+1. Select “Food”
+2. System suggests the least crowded option
+3. Click **Start Navigation**
+4. View path on stadium map
+5. Open in **Google Maps**
+
+---
+
+## 🛠️ Tech Stack
+
+* React + Tailwind (Frontend)
+* FastAPI (Backend decision engine)
+* Google Cloud Run (Deployment)
+* Browser Geolocation API
+
+---
+
+## 📈 Why this matters
+
+This idea can scale to:
+
+* Stadiums
+* Airports
+* Malls
+* Festivals
+
+Anywhere crowd decisions matter.
+
+---
+
+##  Future Scope
+
+* Real sensor-based crowd data
+* Heatmaps + predictive congestion
+* Indoor positioning
+* Multi-user coordination
+
+---
+
+##  Built By
+
+Saara
+
+---
+
+## 🏁 Vision
+
+This isn’t just navigation.
+
+It’s a **decision layer for real-world environments** —
+helping people move smarter, not just faster.
